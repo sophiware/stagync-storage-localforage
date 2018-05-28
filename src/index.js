@@ -1,9 +1,10 @@
 import merge from 'deepmerge'
 import localforage from 'localforage'
+import uuid from "uuid/v4";
 
 export default class Localstorage {
   constructor (parent) {
-    const driver = ('driver' in parent.config) ? parent.config.driver.toUpperCase() : 'LOCALSTORAGE'
+    const driver = ( 'driver' in parent.config ) ? parent.config.driver.toUpperCase() : 'LOCALSTORAGE'
 
     this.local = localforage
 
@@ -11,8 +12,6 @@ export default class Localstorage {
       driver: localforage[driver],
       name: parent.database
     })
-
-    return this
   }
 
   removeItem (item, callback) {
@@ -30,9 +29,18 @@ export default class Localstorage {
   mergeItem (item, value, callback) {
     var that = this
 
-    this.local.getItem(item).then(data => {
-      const result = merge(data, value)
-      that.local.setItem(item, result, callback)
+    this.local.getItem(item, (err, data) => {
+      if (typeof data === 'object') {
+        if (Array.isArray(data)) {
+          data.push(value)
+          that.local.setItem(item, data, callback)
+        } else {
+          const result = merge(data, value)
+          that.local.setItem(item, result, callback)
+        }
+      } else {
+        that.local.setItem(item, value, callback)
+      }
     })
   }
 

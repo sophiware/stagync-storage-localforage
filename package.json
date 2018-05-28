@@ -1,6 +1,6 @@
 {
   "name": "stagync-storage-localforage",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "Wrapper do localforage para stagync",
   "main": "lib/index.js",
   "scripts": {
@@ -17,7 +17,8 @@
   },
   "homepage": "https://github.com/sophiware/stagync-storage-localforage#readme",
   "dependencies": {
-    "deepmerge": "^2.0.0"
+    "deepmerge": "^2.0.0",
+    "localforage": "^1.7.1"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
