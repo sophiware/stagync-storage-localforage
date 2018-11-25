@@ -1,6 +1,5 @@
 import merge from 'deepmerge'
 import localforage from 'localforage'
-import uuid from "uuid/v4";
 
 export default class Localstorage {
   constructor (parent) {
@@ -23,7 +22,7 @@ export default class Localstorage {
   }
 
   setItem (item, value, callback) {
-    return this.local.setItem(item, value, callback)
+    return this.mergeItem(item, value, callback)
   }
 
   mergeItem (item, value, callback) {
