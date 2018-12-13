@@ -22,24 +22,33 @@ export default class Localstorage {
   }
 
   setItem (item, value, callback) {
-    return this.mergeItem(item, value, callback)
+    var that = this
+
+    return this.local.getItem(item, (err, data) => {
+      if (data !== null && typeof data === 'object') {
+        let obj = data
+
+        Object.keys(value).map(key => {
+          obj[key] = value[key]
+        })
+
+        return that.local.setItem(item, obj, callback)
+      }
+
+      that.local.setItem(item, value, callback)
+    })
   }
 
   mergeItem (item, value, callback) {
     var that = this
 
-    this.local.getItem(item, (err, data) => {
+    return this.local.getItem(item, (err, data) => {
       if (typeof data === 'object') {
-        if (Array.isArray(data)) {
-          data.push(value)
-          that.local.setItem(item, data, callback)
-        } else {
-          const result = merge(data, value)
-          that.local.setItem(item, result, callback)
-        }
-      } else {
-        that.local.setItem(item, value, callback)
+        const result = merge(data, value)
+        that.local.setItem(item, result, callback)
       }
+
+      that.local.setItem(item, value, callback)
     })
   }
 
